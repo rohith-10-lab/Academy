@@ -3,7 +3,7 @@
 // Copyright (c) Metamation India.
 // ------------------------------------------------------------------
 // Program.cs
-// Program to guess a randomly generated number.
+// Program to guess a randomly generated number and provide feedback.
 // ------------------------------------------------------------------------------------------------
 using static System.Console;
 using static System.ConsoleColor;
@@ -12,29 +12,27 @@ do {
    Clear ();
    int targetNum = new Random ().Next (1, 101);
    for (int tries = 1; tries <= 7; tries++) {
-      int inp = GetInput (tries);
-      var (msg, color) = CheckGuess (inp, targetNum, tries);
+      int guess = GetInput (tries);
+      var (msg, color) = CheckGuess (guess, targetNum, tries);
       PrintMsg (msg, color);
-      if (inp == targetNum) break;
+      if (guess == targetNum) break;
    }
    PrintMsg ("GAME OVER!\n", Red);
-   Write ("Play again? (y/n): ");
-   if (ReadKey ().Key != ConsoleKey.Y) break;
-} while (true);
+   Write ("Press Y to play again: ");
+} while (ReadKey ().Key == ConsoleKey.Y);
 
 // Compares the input with the target number and returns a feedback message with a color
-(string, ConsoleColor) CheckGuess (int inp, int targetNum, int cnt) {
-   if (inp < targetNum) return ("Your guess is too low\n", Yellow);
-   if (inp > targetNum) return ("Your guess is too high\n", Yellow);
-   return ($"You guessed correctly in {cnt} attempts\n", Green);
-}
+(string, ConsoleColor) CheckGuess (int guess, int targetNum, int cnt) =>
+   guess < targetNum ? ("Your guess is too low\n", Yellow) :
+   guess > targetNum ? ("Your guess is too high\n", Yellow) :
+   ($"You guessed correctly in {cnt} attempts\n", Green);
 
 // Gets only integer as input from the user
 int GetInput (int cnt) {
    for (; ; ) {
       Write ($"Attempt {cnt}! Guess a number between 1 and 100: ");
-      if (int.TryParse (ReadLine (), out int inp) && inp is not < 1 or > 100) return inp;
-      else PrintMsg ("Enter a valid input.\n", Yellow);
+      if (int.TryParse (ReadLine (), out int guess) && guess is not < 1 or > 100) return guess;
+      PrintMsg ("Enter a valid input.\n", Yellow);
    }
 }
 
