@@ -9,7 +9,7 @@ string[] words = File.ReadAllLines ("words.txt");
 Dictionary<char, int> freq = [];
 foreach (var word in words) {
    foreach (var c in word) {
-      if (freq.ContainsKey (c)) freq[c]++;
+      if (freq.TryGetValue (c, out int value)) freq[c] = ++value;
       else freq[c] = 1;
    }
 }
