@@ -5,13 +5,9 @@
 // Program.cs
 // Program to display character frequency from a word list
 // ------------------------------------------------------------------------------------------------
-string[] words = File.ReadAllLines ("words.txt");
-Dictionary<char, int> freq = [];
-foreach (var word in words) {
-   foreach (var c in word) {
-      if (freq.TryGetValue (c, out int value)) freq[c] = ++value;
-      else freq[c] = 1;
-   }
-}
-foreach (var l in freq.OrderByDescending (x => x.Value).Take (7))
-   Console.WriteLine ($"{l.Key} -> {l.Value}");
+string[] words = File.ReadAllLines ("C:/Work/Academy/A04/bin/Debug/net9.0/words.txt");
+var freq = words.SelectMany (w => w)
+                .GroupBy (c => c)
+                .OrderByDescending (g => g.Count ())
+                .Take (7);
+foreach (var g in freq) Console.WriteLine ($"{g.Key} -> {g.Count ()}");
