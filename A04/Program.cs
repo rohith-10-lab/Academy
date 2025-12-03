@@ -5,7 +5,7 @@
 // Program.cs
 // Program to display character frequency from a word list
 // ------------------------------------------------------------------------------------------------
-string[] words = File.ReadAllLines ("C:/Work/Academy/A04/bin/Debug/net9.0/words.txt");
+string[] words = File.ReadAllLines ("C:/etc/words.txt");
 var freq = words.SelectMany (w => w)
                 .GroupBy (c => c)
                 .OrderByDescending (g => g.Count ())
