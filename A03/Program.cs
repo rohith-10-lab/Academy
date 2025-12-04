@@ -9,9 +9,8 @@ using static System.Console;
 
 string[] words = File.ReadAllLines ("C:/etc/words.txt");
 char[] letters = ['U', 'X', 'A', 'L', 'T', 'N', 'E'];
-char mandatory = letters[0];
 List<(int score, string word, bool pangram)> result = [];
-foreach (var word in GetValidWords (words, letters, mandatory)) {
+foreach (var word in GetValidWords (words, letters, letters[0])) {
    bool pangram = IsPangram (word, letters);
    result.Add ((ComputeScore (word, pangram), word, pangram));
 }
