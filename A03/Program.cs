@@ -15,9 +15,9 @@ foreach (var word in GetValidWords (words, letters, mandatory)) {
    bool pangram = IsPangram (word, letters);
    result.Add ((ComputeScore (word, pangram), word, pangram));
 }
-result = [.. result.OrderByDescending (x => x.score).ThenBy (x => x.word)];
 int total = 0;
-foreach (var (score, word, pangram) in result) {
+foreach (var (score, word, pangram) in result.OrderByDescending (x => x.score)
+                                             .ThenBy (x => x.word)) {
    if (pangram) ForegroundColor = ConsoleColor.Green;
    WriteLine ($"{score,3}. {word}");
    ResetColor ();
@@ -26,14 +26,14 @@ foreach (var (score, word, pangram) in result) {
 WriteLine ($"----\n{total,3} total");
 
 // Adds the valid words to a list
-List<string> GetValidWords (string[] words, char[] letters, char mandatory) =>
+string[] GetValidWords (string[] words, char[] letters, char mandatory) =>
     [.. words.Where (w => IsValid (w, letters, mandatory))];
 
 // Validates the spelling bee conditions
 bool IsValid (string word, char[] letters, char mandatory) =>
    word.Length >= 4 &&
    word.Contains (mandatory) &&
-   word.All (c => letters.Contains (c));
+   word.All (letters.Contains);
 
 // Calculates the base score and applies the pangram bonus
 int ComputeScore (string word, bool pangram) =>
