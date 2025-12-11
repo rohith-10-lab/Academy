@@ -9,13 +9,12 @@ using static System.Console;
 
 string[] words = File.ReadAllLines ("C:/etc/words.txt");
 char[] letters = ['U', 'X', 'A', 'L', 'T', 'N', 'E'];
-List<(int score, string word, bool pangram)> result = [];
-foreach (var word in GetValidWords (words, letters, letters[0])) {
-   bool pangram = IsPangram (word, letters);
-   result.Add ((ComputeScore (word, pangram), word, pangram));
+List<(string word, int score, bool pangram)> result = [];
+foreach (var word in GetValidWords (words)) {
+   result.Add (ComputeScore (word));
 }
 int total = 0;
-foreach (var (score, word, pangram) in result.OrderByDescending (x => x.score)
+foreach (var (word, score, pangram) in result.OrderByDescending (x => x.score)
                                              .ThenBy (x => x.word)) {
    if (pangram) ForegroundColor = ConsoleColor.Green;
    WriteLine ($"{score,3}. {word}");
@@ -25,18 +24,22 @@ foreach (var (score, word, pangram) in result.OrderByDescending (x => x.score)
 WriteLine ($"----\n{total,3} total");
 
 // Adds the valid words to a list
-string[] GetValidWords (string[] words, char[] letters, char mandatory) =>
-    [.. words.Where (w => IsValid (w, letters, mandatory))];
+string[] GetValidWords (string[] words) => [.. words.Where (IsValid)];
 
 // Validates the spelling bee conditions
-bool IsValid (string word, char[] letters, char mandatory) =>
+bool IsValid (string word) =>
    word.Length >= 4 &&
-   word.Contains (mandatory) &&
+   word.Contains (letters[0]) &&
    word.All (letters.Contains);
 
 // Calculates the base score and applies the pangram bonus
-int ComputeScore (string word, bool pangram) =>
-   (word.Length == 4 ? 1 : word.Length) + (pangram ? 7 : 0);
-
-// Checks whether the word uses every character from letters
-bool IsPangram (string word, char[] letters) => letters.All (word.Contains);
+(string Word, int Score, bool IsPangram) ComputeScore (string word) {
+   var len = word.Length; var score = 1; var isPangram = false;
+   if (len > 4) {
+      score = len;
+      if (len >= 7 && letters.All (word.Contains)) {
+         score += 7; isPangram = true;
+      }
+   }
+   return (word, score, isPangram);
+}
