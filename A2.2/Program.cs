@@ -1,0 +1,32 @@
+﻿// ------------------------------------------------------------------------------------------------
+// Training ~ A training program for new joinees at Metamation, Batch- July 2025.
+// Copyright (c) Metamation India.
+// ------------------------------------------------------------------
+// Program.cs
+// Program to guess a randomly generated number and provide feedback.
+// ------------------------------------------------------------------------------------------------
+using static System.Console;
+
+WriteLine ("Please think of a number between 0 and 127, and I will find it.\n");
+WriteLine ($"\nYour number is: {FindNum ()}");
+
+static int FindNum () {
+   int num = 0;
+
+   for (int bitIndex = 6; bitIndex >= 0; bitIndex--) {
+      int bitMask = 1 << bitIndex;
+      int trial = num + bitMask;
+
+      while (true) {
+         Write ($"Is your number >= {num + bitMask}? (y/n): ");
+         var key = ReadKey ().Key;
+         WriteLine ();
+         if (key == ConsoleKey.Y) { num = trial; break;}
+         if (key == ConsoleKey.N) break;
+
+         WriteLine ("Enter y or n only.\n");
+      }
+   }
+
+   return num;
+}
