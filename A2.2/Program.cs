@@ -3,30 +3,26 @@
 // Copyright (c) Metamation India.
 // ------------------------------------------------------------------
 // Program.cs
-// Program to guess a randomly generated number and provide feedback.
+// Program to find your chosen number using yes/no questions.
 // ------------------------------------------------------------------------------------------------
 using static System.Console;
 
 WriteLine ("Please think of a number between 0 and 127, and I will find it.\n");
 WriteLine ($"\nYour number is: {FindNum ()}");
 
+// Finds the number by determining each bit from MSB to LSB using yes/no questions
 static int FindNum () {
    int num = 0;
-
    for (int bitIndex = 6; bitIndex >= 0; bitIndex--) {
       int bitMask = 1 << bitIndex;
-      int trial = num + bitMask;
-
       while (true) {
          Write ($"Is your number >= {num + bitMask}? (y/n): ");
          var key = ReadKey ().Key;
          WriteLine ();
-         if (key == ConsoleKey.Y) { num = trial; break;}
+         if (key == ConsoleKey.Y) { num += bitMask; break;}
          if (key == ConsoleKey.N) break;
-
          WriteLine ("Enter y or n only.\n");
       }
    }
-
    return num;
 }
