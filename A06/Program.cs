@@ -12,20 +12,15 @@ const int N = 8;
 // Only 1 queen is placed per row, so this 1D array fully describes a board
 int[] queens = new int[N];
 List<int[]> canonicalSolns = [];
-int count = 1;
 Solver (0);
-foreach (var board in canonicalSolns) {
-   WriteLine (count++);
-   PrintBoard (board);
-   WriteLine ();
-}
+PrintBoard (canonicalSolns);
 
 // Backtracking: try all safe columns in this row and recurse to build full solutions.
 void Solver (int r) {
    for (queens[r] = 0; queens[r] < N; queens[r]++) {
       // move to the next row, if recursion returns, backtrack and try next col
       if (IsSafe (r)) {
-         if (r == N - 1) AddSoln (queens);
+         if (r == N - 1) AddSolution (queens);
          else Solver (r + 1);
       }
    }
@@ -41,18 +36,17 @@ void Solver (int r) {
 }
 
 // Checks all rotations and mirrors to determine whether this board is a new unique solution.
-void AddSoln (int[] q) {
+void AddSolution (int[] q) {
    // 0 -> identity, 1 -> 90, 2 -> 180, 3 -> 270
    for (int i = 0; i < 4; i++) {
-      q = Rotated (q);
-      if (IsRecorded (q)) return;
-      if (IsRecorded (Mirror (q))) return;
+      q = Rotated ();
+      if (IsRecorded (q) || IsRecorded (Mirror ())) return;
    }
-   canonicalSolns.Add([.. q]);
+   canonicalSolns.Add ([.. q]);
 
    // Helper methods
    // 90 degree clockwise rotation
-   int[] Rotated (int[] q) {
+   int[] Rotated () {
       int[] rotated = new int[N];
       // (row, col) -> (col, N - 1 - row)
       for (int r = 0; r < N; r++) rotated[q[r]] = N - 1 - r;
@@ -60,24 +54,29 @@ void AddSoln (int[] q) {
    }
 
    // Produces vertical mirror by reversing the row order
-   int[] Mirror (int[] q) => [.. q.Reverse ()];
+   int[] Mirror () => [.. q.Reverse ()];
 
    // Checks whether this board configuration has been stored before.
    bool IsRecorded (int[] q) => canonicalSolns.Any (board => board.SequenceEqual (q));
 }
 
 // Prints the NxN board with the queen pieces
-void PrintBoard (int[] q) {
+void PrintBoard (List<int[]> boards) {
    OutputEncoding = new UnicodeEncoding ();
-   string top = "┌" + string.Join ("┬", Enumerable.Repeat ("───", N)) + "┐";
-   string mid = "├" + string.Join ("┼", Enumerable.Repeat ("───", N)) + "┤";
-   string bot = "└" + string.Join ("┴", Enumerable.Repeat ("───", N)) + "┘";
-   WriteLine (top);
-   for (int r = 0; r < N; r++) {
-      Write ("│");
-      for (int c = 0; c < N; c++) Write ((q[r] == c) ? " ♕ │" : "   │");
+   int count = 1;
+   foreach (var q in boards) {
+      WriteLine (count++);
+      string top = "┌" + string.Join ("┬", Enumerable.Repeat ("───", N)) + "┐";
+      string mid = "├" + string.Join ("┼", Enumerable.Repeat ("───", N)) + "┤";
+      string bot = "└" + string.Join ("┴", Enumerable.Repeat ("───", N)) + "┘";
+      WriteLine (top);
+      for (int r = 0; r < N; r++) {
+         Write ("│");
+         for (int c = 0; c < N; c++) Write ((q[r] == c) ? " ♕ │" : "   │");
+         WriteLine ();
+         if (r < N - 1) WriteLine (mid);
+      }
+      WriteLine (bot);
       WriteLine ();
-      if (r < N - 1) WriteLine (mid);
    }
-   WriteLine (bot);
 }
