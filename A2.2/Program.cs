@@ -7,7 +7,7 @@
 // ------------------------------------------------------------------------------------------------
 using static System.Console;
 
-WriteLine ("Please think of a number between 0 and 127, and I will find it.\n");
+WriteLine ("Please think of a number from 1 to 100, and I will find it.\n");
 WriteLine ($"\nYour number is: {FindNum ()}");
 
 // Finds the number by determining each bit from MSB to LSB using yes/no questions
