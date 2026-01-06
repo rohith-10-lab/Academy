@@ -19,14 +19,14 @@ PrintBoard (canonicalSolns);
 void Solver (int r) {
    for (queens[r] = 0; queens[r] < N; queens[r]++) {
       // move to the next row, if recursion returns, backtrack and try next col
-      if (IsSafe (r)) {
+      if (IsSafe ()) {
          if (r == N - 1) AddSolution (queens);
          else Solver (r + 1);
       }
    }
 
    // Checks whether placing a queen at row r conflicts with any earlier queen.
-   bool IsSafe (int r) {
+   bool IsSafe () {
       for (int prevRow = 0; prevRow < r; prevRow++) {
          int dy = r - prevRow; int dx = Math.Abs (queens[r] - queens[prevRow]);
          if (dx == 0 || dx == dy) return false;
