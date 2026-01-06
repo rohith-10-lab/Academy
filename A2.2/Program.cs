@@ -1,0 +1,28 @@
+﻿// ------------------------------------------------------------------------------------------------
+// Training ~ A training program for new joinees at Metamation, Batch- July 2025.
+// Copyright (c) Metamation India.
+// ------------------------------------------------------------------
+// Program.cs
+// Program to find your chosen number using yes/no questions.
+// ------------------------------------------------------------------------------------------------
+using static System.Console;
+
+WriteLine ("Please think of a number from 1 to 100, and I will find it.\n");
+WriteLine ($"\nYour number is: {FindNum ()}");
+
+// Finds the number by determining each bit from MSB to LSB using yes/no questions
+static int FindNum () {
+   int num = 0;
+   for (int bitIndex = 6; bitIndex >= 0; bitIndex--) {
+      int bitMask = 1 << bitIndex;
+      while (true) {
+         Write ($"Is your number >= {num + bitMask}? (y/n): ");
+         var key = ReadKey ().Key;
+         WriteLine ();
+         if (key == ConsoleKey.Y) { num += bitMask; break;}
+         if (key == ConsoleKey.N) break;
+         WriteLine ("Enter y or n only.\n");
+      }
+   }
+   return num;
+}
